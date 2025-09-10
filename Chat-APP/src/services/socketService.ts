@@ -22,7 +22,12 @@ export interface SocketEvents{
   'user:status': (data: { userId: string; isOnline: boolean; lastSeen?: number }) => void;
   
  
-
+//! Connection events
+  'connect': () => void;
+  'disconnect': () => void;
+  'reconnect': () => void;
+  'error': (error: any) => void;
+}
 // class SocketService {
 
 
