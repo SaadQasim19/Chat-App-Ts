@@ -10,6 +10,12 @@ export interface SocketEvents{
   'message:delivered': (data: { conversationId: string; messageId: string }) => void;
   'message:read': (data: { conversationId: string; messageId: string }) => void;
   
+//! Typing events
+  'typing:start': (data: { conversationId: string; user: User }) => void;
+  'typing:stop': (data: { conversationId: string; user: User }) => void;
+  'typing:update': (data: { conversationId: string; users: string[] }) => void;
+  
+ 
 
 // class SocketService {
 
