@@ -15,6 +15,12 @@ export interface SocketEvents{
   'typing:stop': (data: { conversationId: string; user: User }) => void;
   'typing:update': (data: { conversationId: string; users: string[] }) => void;
   
+    //! User events
+  'user:join': (data: { conversationId: string; user: User }) => void;
+  'user:leave': (data: { conversationId: string; user: User }) => void;
+  'user:online': (data: { users: User[] }) => void;
+  'user:status': (data: { userId: string; isOnline: boolean; lastSeen?: number }) => void;
+  
  
 
 // class SocketService {
