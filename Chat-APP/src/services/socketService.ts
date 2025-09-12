@@ -175,7 +175,37 @@ class SocketService {
       this.socket.on('user:status', callback);
     }
   }
+   //! Connection status
+  getConnectionStatus(): boolean {
+    return this.isConnected;
+  }
+
+  //! Generic event listener
+  on<K extends keyof SocketEvents>(event: K, callback: SocketEvents[K]): void {
+    if (this.socket) {
+      this.socket.on(event as string, callback as any);
+    }
+  }
+
+  //! Generic event emitter
+  emit<K extends keyof SocketEvents>(event: K, ...args: Parameters<SocketEvents[K]>): void {
+    if (this.isConnected && this.socket) {
+      this.socket.emit(event as string, ...args);
+    }
+  }
+
+  //! Remove event listener
+  off(event: string, callback?: Function): void {
+    if (this.socket) {
+      this.socket.off(event, callback as any);
+    }
+  }
 }
+
+//! Export singleton instance
+export const socketService = new SocketService();
+export default socketService;
+
 
 
 
