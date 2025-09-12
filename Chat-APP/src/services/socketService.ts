@@ -131,6 +131,27 @@ class SocketService {
       this.socket.emit('message:read', { conversationId, messageId });
     }
   }
+
+//! Typing methods
+  startTyping(conversationId: string, user: User): void {
+    if (this.isConnected && this.socket) {
+      this.socket.emit('typing:start', { conversationId, user });
+    }
+  }
+
+  stopTyping(conversationId: string, user: User): void {
+    if (this.isConnected && this.socket) {
+      this.socket.emit('typing:stop', { conversationId, user });
+    }
+  }
+
+  onTypingUpdate(callback: (data: { conversationId: string; users: string[] }) => void): void {
+    if (this.socket) {
+      this.socket.on('typing:update', callback);
+    }
+  }
+
+
 }
 
 
