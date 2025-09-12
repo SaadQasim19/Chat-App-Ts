@@ -151,7 +151,30 @@ class SocketService {
     }
   }
 
+  //! User methods
+  joinConversation(conversationId: string, user: User): void {
+    if (this.isConnected && this.socket) {
+      this.socket.emit('user:join', { conversationId, user });
+    }
+  }
 
+  leaveConversation(conversationId: string, user: User): void {
+    if (this.isConnected && this.socket) {
+      this.socket.emit('user:leave', { conversationId, user });
+    }
+  }
+
+  onUserOnline(callback: (data: { users: User[] }) => void): void {
+    if (this.socket) {
+      this.socket.on('user:online', callback);
+    }
+  }
+
+  onUserStatusChange(callback: (data: { userId: string; isOnline: boolean; lastSeen?: number }) => void): void {
+    if (this.socket) {
+      this.socket.on('user:status', callback);
+    }
+  }
 }
 
 
