@@ -120,7 +120,17 @@ class SocketService {
       this.socket.on('message:delivered', callback);
     }
   }
+  markMessageDelivered(conversationId: string, messageId: string): void {
+    if (this.isConnected && this.socket) {
+      this.socket.emit('message:delivered', { conversationId, messageId });
+    }
+  }
 
+  markMessageRead(conversationId: string, messageId: string): void {
+    if (this.isConnected && this.socket) {
+      this.socket.emit('message:read', { conversationId, messageId });
+    }
+  }
 }
 
 
