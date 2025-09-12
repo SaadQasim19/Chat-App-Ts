@@ -99,7 +99,19 @@ class SocketService {
       this.isConnected = false;
     }
   }
+
+
+  //! Message methods
+  sendMessage(conversationId: string, message: Omit<Message, 'id' | 'timestamp'>): void {
+    if (this.isConnected && this.socket) {
+      this.socket.emit('message:send', { conversationId, message });
+    } else {
+      console.log('⚠️ Socket not connected, message not sent');
+    }
+  }
+
+
 }
-// }
+
 
 
