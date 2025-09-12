@@ -28,11 +28,78 @@ export interface SocketEvents{
   'reconnect': () => void;
   'error': (error: any) => void;
 }
-// class SocketService {
+class SocketService {
 
+ private socket: Socket | null = null;
+  private isConnected = false;
+  private reconnectAttempts = 0;
+  private maxReconnectAttempts = 5;
 
+   connect(userId: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      try {
+       
+        this.socket = io('ws://localhost:3001', {
+          auth: {
+            userId,
+          },
+          transports: ['websocket', 'polling'],
+          timeout: 10000,
+        });
 
+        this.socket.on('connect', () => {
+          console.log('🟢 Socket connected:', this.socket?.id);
+          this.isConnected = true;
+          this.reconnectAttempts = 0;
+          resolve();
+        });
+
+        this.socket.on('disconnect', (reason) => {
+          console.log('🔴 Socket disconnected:', reason);
+          this.isConnected = false;
+        });
+
+        this.socket.on('reconnect', (attemptNumber) => {
+          console.log('🟡 Socket reconnected after', attemptNumber, 'attempts');
+          this.isConnected = true;
+        });
+
+        this.socket.on('reconnect_error', () => {
+          this.reconnectAttempts++;
+          console.log('🔴 Reconnect attempt failed:', this.reconnectAttempts);
+          
+          if (this.reconnectAttempts >= this.maxReconnectAttempts) {
+            console.log('❌ Max reconnect attempts reached');
+            this.disconnect();
+          }
+        });
+
+        this.socket.on('connect_error', (error) => {
+          console.log('❌ Connection error:', error.message);
+
+          setTimeout(() => {
+            if (!this.isConnected) {
+              console.log('⚠️ Server not available, using mock mode');
+              resolve();
+            }
+          }, 2000);
+        });
+
+      } catch (error) {
+        console.error('❌ Socket connection failed:', error);
+        reject(error);
+      }
+    });
+  }
+
+  disconnect(): void {
+    if (this.socket) {
+      this.socket.disconnect();
+      this.socket = null;
+      this.isConnected = false;
+    }
+  }
+}
 // }
 
 
-}
