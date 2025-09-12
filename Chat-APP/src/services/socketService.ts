@@ -110,6 +110,11 @@ class SocketService {
     }
   }
 
+  onMessageReceive(callback: (data: { conversationId: string; message: Message }) => void): void {
+    if (this.socket) {
+      this.socket.on('message:receive', callback);
+    }
+  }
 
 }
 
